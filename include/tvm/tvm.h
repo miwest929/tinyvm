@@ -90,7 +90,7 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 					    int arraySize = 0;
 						tvm_stack_pop(vm->mem, &arraySize);
 						// dynamically allocate an array of that size (type is always INT)
-						int* arrayRef = tvm_mem_allocate(arraySize);
+						int* arrayRef = tvm_mem_allocate(vm->mem, arraySize);
 						// push reference to the new array on to the stack
 						tvm_stack_push(vm->mem, arrayRef);
 				   }
@@ -106,12 +106,12 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 
 						// pop without dereferencing
 						int* aref = vm->mem->registers[ESP].i32_ptr;
-						printf("index = 0, value = %i\n", aref[0]);
+						vm->mem->registers[ESP].i32_ptr += 1;
 
                         union tvm_local_var_value_type local_var_value;
 						local_var_value.refValue = aref;
 						tvm_mem_set_local_var_value(vm->mem, localVarIndex, local_var_value);
-						vm->mem->registers[ESP].i32_ptr += 1;					
+											
 					}
 
 					break;
@@ -133,9 +133,8 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 
 					 // pop without dereferencing
                      aref = vm->mem->registers[ESP].i32_ptr;
-					 aref[index] = value;
-					 // printf("index = %i, value = %i\n", index, *(aref + index));
 					 vm->mem->registers[ESP].i32_ptr += 1;
+					 aref[index] = value;	 
 				   }
 				   break;
 /* dup */       case 0x24:
@@ -150,9 +149,8 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 
 					 // pop without dereferencing
                      aref = vm->mem->registers[ESP].i32_ptr;
-                     printf("idx = %i, val = %i\n", index, aref[index]);
-					 tvm_stack_push(vm->mem, &aref[index]);
 					 vm->mem->registers[ESP].i32_ptr += 1;
+					 tvm_stack_push(vm->mem, &aref[index]);
 				   }
 				   break;
 /* iconst */    case 0x26:

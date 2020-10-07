@@ -30,6 +30,12 @@ union tvm_local_var_value_type {
   int* refValue;
 };
 
+struct tvm_objs {
+  int* ref;
+  uint count;
+  struct tvm_objs* next;
+};
+
 // a indexed map into the local variables
 // NOTE: The local var references get destroyed along with the stack frame
 struct tvm_local_vars {
@@ -55,6 +61,7 @@ struct tvm_mem {
 	union tvm_reg_u *registers;
 
 	struct tvm_local_vars local_vars;
+	struct tvm_objs *objs; // linked list of allocated objects
 };
 
 struct tvm_mem *tvm_mem_create(size_t size);
@@ -62,6 +69,7 @@ void tvm_mem_destroy(struct tvm_mem *mem);
 
 union tvm_local_var_value_type tvm_mem_get_local_var_value(struct tvm_mem *m, uint localIndex);
 void tvm_mem_set_local_var_value(struct tvm_mem *m, uint localIndex, union tvm_local_var_value_type value);
-int* tvm_mem_allocate(size_t size);
+int* tvm_mem_allocate(struct tvm_mem *m, size_t size);
+void tvm_register_obj(struct tvm_mem *m, int* ref, size_t size);
 
 #endif
