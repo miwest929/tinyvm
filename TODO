@@ -1,14 +1,18 @@
 TODO:
 
 	(Basic)
+  - Add instructions for dynamically allocating arrays from Heap
+    https://cs.nyu.edu/courses/fall01/V22.0201-001/jvm3.html
 	- NASM style local labels
+    https://www.tortall.net/projects/yasm/manual/html/nasm-local-label.html
 	- Implement defining bytes/words/dwords
 	- Add C style defines to preprocessor
 	- Move parsed TVM program code into the VM's virtual address space
 
 	(Advanced)
 	- Fix/refactor the debugger (it doesn't work)
-	- Interrupts
+  - Add very simple Mark-and-sweep garbage collector
+	- Interrupts. Traps
 	- SDL or GLFW based screen for outputting the contents of a framebuffer
 	- JIT compilation
 	- C interface

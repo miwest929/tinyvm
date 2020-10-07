@@ -1,6 +1,6 @@
-CC = clang
+CC = gcc
 
-CFLAGS = -Wall -pipe -Iinclude/ -std=gnu11
+CFLAGS = -Wall -pipe -Iinclude/
 OFLAGS = 
 LFLAGS = $(CFLAGS) -Llib/
 PEDANTIC_FLAGS = -Werror -pedantic -pedantic-errors

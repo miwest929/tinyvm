@@ -1,0 +1,53 @@
+start:
+	mov eax, 1
+	mov ebx, 0
+
+    iconst 5
+    newarray
+    dup
+    iconst 0
+    iconst 1
+    iastore
+    dup
+    iconst 1
+    iconst 1
+    iastore
+    dup
+    iconst 2
+    iconst 2
+    iastore
+    dup
+    iconst 3
+    iconst 3
+    iastore
+    dup
+    iconst 4
+    iconst 5
+    iastore
+    dup
+    iconst 5
+    iconst 8
+    iastore
+    iconst 1
+    astore
+    iconst 0
+    istore 2
+loop:
+    iload 2
+    aload 1
+    arraylength
+    icmp
+    jge done
+    aload 1
+    iconst 2
+    iload
+    iprn
+    iinc 2, 1
+    jp loop
+done:
+    prn 255
+
+
+
+
+end:
