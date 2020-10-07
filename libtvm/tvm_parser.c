@@ -10,7 +10,9 @@ const char *tvm_opcode_map[] = {
 	"not", "xor", "or", "and", "shl", "shr",
 	"cmp", "jmp", "call", "ret",
 	"je", "jne", "jg", "jge", "jl", "jle",
-	"prn", 0
+	"prn", "newarray", "astore", "aload", "iastore",
+	"dup", "iaload", "iconst", "istore", "iload", "icmp",
+	"iprn", "iinc", "arraylength", 0
 };
 
 const char *tvm_register_map[] = {
@@ -244,8 +246,9 @@ int *token_to_register(const char *token, struct tvm_mem *mem)
 int instr_to_opcode(const char *instr)
 {
 	for (int i = 0; tvm_opcode_map[i]; i++)
-		if (strcmp(instr, tvm_opcode_map[i]) == 0)
+		if (strcmp(instr, tvm_opcode_map[i]) == 0) {
 			return i;
+		}
 
 	return -1;
 }

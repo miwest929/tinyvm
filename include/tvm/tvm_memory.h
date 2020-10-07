@@ -37,16 +37,6 @@ struct tvm_local_vars {
 	int count;
 };
 
-typedef enum {
-  OBJ_STRING,
-  OBJ_NUMBER
-} ObjType;
-
-struct tvm_objs {
-  ObjType type;
-  struct tvm_objs* next;
-};
-
 struct tvm_mem {
 	/*
 	 *	Similar to x86 FLAGS register
@@ -64,8 +54,7 @@ struct tvm_mem {
 
 	union tvm_reg_u *registers;
 
-	struct tvm_local_vars *local_vars;
-	struct tvm_objs *objs;
+	struct tvm_local_vars local_vars;
 };
 
 struct tvm_mem *tvm_mem_create(size_t size);
@@ -73,6 +62,6 @@ void tvm_mem_destroy(struct tvm_mem *mem);
 
 union tvm_local_var_value_type tvm_mem_get_local_var_value(struct tvm_mem *m, uint localIndex);
 void tvm_mem_set_local_var_value(struct tvm_mem *m, uint localIndex, union tvm_local_var_value_type value);
-void* tvm_mem_allocate(size_t size);
+int* tvm_mem_allocate(size_t size);
 
 #endif

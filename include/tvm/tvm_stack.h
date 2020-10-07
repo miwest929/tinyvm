@@ -11,7 +11,7 @@ static inline void tvm_stack_create(struct tvm_mem *mem, size_t size)
 {
 	mem->registers[EBP].i32_ptr =
 		((int32_t *)mem->mem_space) + (size / sizeof(int32_t));
-	mem->registers[ESP].i32_ptr = mem->registers[ESP].i32_ptr;
+	mem->registers[ESP].i32_ptr = mem->registers[EBP].i32_ptr;
 }
 
 static inline void tvm_stack_push(struct tvm_mem *mem, int *item)
