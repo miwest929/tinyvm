@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <stdbool.h>
 
 #define MIN_MEMORY_SIZE (64 * 1024 * 1024) /* 64 MB */
 
@@ -26,20 +27,27 @@ union tvm_reg_u {
 };
 
 union tvm_local_var_value_type {
-  int value;
-  int* refValue;
+	int value;
+	int* refValue;
+};
+
+
+struct tvm_single_local_var {
+    union tvm_local_var_value_type variable;
+	bool isInUse;
 };
 
 struct tvm_objs {
   int* ref;
   uint count;
+  bool reachable;
   struct tvm_objs* next;
 };
 
 // a indexed map into the local variables
 // NOTE: The local var references get destroyed along with the stack frame
 struct tvm_local_vars {
-	union tvm_local_var_value_type values[256];
+	struct tvm_single_local_var values[256];
 	int count;
 };
 

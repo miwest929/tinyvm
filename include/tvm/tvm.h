@@ -12,6 +12,7 @@
 #include "tvm_memory.h"
 #include "tvm_program.h"
 #include "tvm_tokens.h"
+#include "tvm_gc.h"
 
 struct tvm_ctx {
 	struct tvm_prog *prog;
@@ -92,7 +93,8 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 						// dynamically allocate an array of that size (type is always INT)
 						int* arrayRef = tvm_mem_allocate(vm->mem, arraySize);
 						// push reference to the new array on to the stack
-						tvm_stack_push(vm->mem, arrayRef);
+						vm->mem->registers[ESP].i32_ptr -= 1;
+	                    vm->mem->registers[ESP].i32_ptr = arrayRef;
 				   }
 
 				   // the VM itself needs to keep track of the array reference so it can deallocate it later on
@@ -110,8 +112,7 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 
                         union tvm_local_var_value_type local_var_value;
 						local_var_value.refValue = aref;
-						tvm_mem_set_local_var_value(vm->mem, localVarIndex, local_var_value);
-											
+						tvm_mem_set_local_var_value(vm->mem, localVarIndex, local_var_value);	
 					}
 
 					break;
@@ -203,6 +204,11 @@ static inline void tvm_step(struct tvm_ctx *vm, int *instr_idx)
 						tvm_stack_pop(vm->mem, &dummyValue);
 						int arrLength = 6;
 						tvm_stack_push(vm->mem, &arrLength);
+					}
+					break;
+/* rungc */		case 0x2D:
+				    {
+                        tvm_gc_run(vm->mem);      
 					}
 					break;
 	};

@@ -32,7 +32,6 @@ start:
     astore
     iconst 0
     istore 2
-
 loop:
     iload 2
     aload 1
@@ -46,9 +45,9 @@ loop:
     iinc 2, 1
     jmp loop
 done:
-    prn 255
-
-
-
+    prn 250
+    iconst 101
+    istore 1
+    rungc
 
 end:

@@ -2,7 +2,8 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <stdio.h> 
+#include <stdio.h>
+#include <stdbool.h> 
 
 #define NUM_REGISTERS 17
 
@@ -48,7 +49,6 @@ int* tvm_mem_allocate(struct tvm_mem *m, size_t size)
    }
 
    tvm_register_obj(m, ref, size);
-
    return ref;
 }
 
@@ -57,8 +57,8 @@ void tvm_register_obj(struct tvm_mem *m, int* ref, size_t size)
 	struct tvm_objs *obj = (struct tvm_objs*)malloc(sizeof(struct tvm_objs));
 	obj->ref = ref;
 	obj->count = size;
+	obj->reachable = true;
 	obj->next = NULL;
-
 	if (!m->objs) {
       m->objs = obj;
 	} else {
@@ -70,11 +70,22 @@ void tvm_register_obj(struct tvm_mem *m, int* ref, size_t size)
 
 union tvm_local_var_value_type tvm_mem_get_local_var_value(struct tvm_mem *m, uint localIndex)
 {
-  return m->local_vars.values[localIndex];
+  struct tvm_single_local_var var = m->local_vars.values[localIndex];
+  if (!var.isInUse) {
+    printf("ERROR: Requested to get value for local var #%i but it doesn't exist.", localIndex);
+    struct tvm_single_local_var emptyVar = {{.value = 0}, false};
+	return emptyVar.variable;
+  }
+
+  return var.variable;
 }
 
 void tvm_mem_set_local_var_value(struct tvm_mem *m, uint localIndex, union tvm_local_var_value_type value)
 {
-  // printf("IN MEM.C: index = 0, value = %i\n", *(value.refValue + 0));
-  m->local_vars.values[localIndex] = value;
+  struct tvm_single_local_var var = m->local_vars.values[localIndex];
+  if (!var.isInUse) {
+	  m->local_vars.count += 1;
+  }
+  m->local_vars.values[localIndex].isInUse = true;
+  m->local_vars.values[localIndex].variable = value;
 }

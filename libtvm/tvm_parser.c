@@ -12,7 +12,7 @@ const char *tvm_opcode_map[] = {
 	"je", "jne", "jg", "jge", "jl", "jle",
 	"prn", "newarray", "astore", "aload", "iastore",
 	"dup", "iaload", "iconst", "istore", "iload", "icmp",
-	"iprn", "iinc", "arraylength", 0
+	"iprn", "iinc", "arraylength", "rungc", 0
 };
 
 const char *tvm_register_map[] = {
